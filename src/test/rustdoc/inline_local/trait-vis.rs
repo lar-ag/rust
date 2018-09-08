@@ -8,14 +8,21 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-// no-prefer-dynamic
+pub trait ThisTrait {}
 
-#![crate_type = "rlib"]
-#![no_std]
+mod asdf {
+    use ThisTrait;
 
-use core::panic::PanicInfo;
+    pub struct SomeStruct;
 
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    loop {}
+    impl ThisTrait for SomeStruct {}
+
+    trait PrivateTrait {}
+
+    impl PrivateTrait for SomeStruct {}
 }
+
+// @has trait_vis/struct.SomeStruct.html
+// @has - '//code' 'impl ThisTrait for SomeStruct'
+// !@has - '//code' 'impl PrivateTrait for SomeStruct'
+pub use asdf::SomeStruct;

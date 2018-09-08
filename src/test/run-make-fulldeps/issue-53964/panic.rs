@@ -1,4 +1,4 @@
-// Copyright 2012-2013 The Rust Project Developers. See the COPYRIGHT
+// Copyright 2018 The Rust Project Developers. See the COPYRIGHT
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
@@ -8,13 +8,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-// ignore-stage1
+#![crate_type = "lib"]
+#![feature(panic_handler)]
+#![no_std]
 
-// Issue #52129: ICE when trying to document the `quote` proc-macro from proc_macro
+use core::panic::PanicInfo;
 
-// As of this writing, we don't currently attempt to document proc-macros. However, we shouldn't
-// crash when we try.
-
-extern crate proc_macro;
-
-pub use proc_macro::*;
+#[panic_handler]
+fn panic(_: &PanicInfo) -> ! {
+    loop {}
+}

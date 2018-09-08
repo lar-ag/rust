@@ -8,14 +8,16 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-// no-prefer-dynamic
+// when implementing the fix for traits-in-bodies, there was an ICE when documenting private items
+// and a trait was defined in non-module scope
 
-#![crate_type = "rlib"]
-#![no_std]
+// compile-flags:--document-private-items
 
-use core::panic::PanicInfo;
+// @has traits_in_bodies_private/struct.SomeStruct.html
+// @!has - '//code' 'impl HiddenTrait for SomeStruct'
+pub struct SomeStruct;
 
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    loop {}
+fn __implementation_details() {
+    trait HiddenTrait {}
+    impl HiddenTrait for SomeStruct {}
 }
